@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+
+	<head>
+		
+		<title>Animated SVG Example #1</title>
+		
+		<style>
+		
+		#svgButton {
+			cursor: pointer;
+		}
+		
+		</style>
+		
+		<script>
+		
+			function initAnimation() {
+								
+				// Animation graphics-related variables
+				var animationBuffer = 30;
+				var animationViewableArea = 92;
+				var startPosition = 0 - animationBuffer;
+				var totalDistance = animationViewableArea + (2 * animationBuffer);
+				var hilightRotation = -30;
+				var highlightActive = false;
+
+				// Animation time-related variables
+				var totalDuration = 750; // Duration in milliseconds
+				var currentTime = 0;
+				var time;
+
+				// Function called on mouse over
+				function animateShimmer() {
+	
+					if(highlightActive){
+		
+						// Determine whether animation is still active
+						if(currentTime < totalDuration){
+					    	requestAnimationFrame(animateShimmer);
+						} else {
+							highlightActive = false;
+							resetShimmer();
+			
+							return;
+						}
+	
+						// Calculate current time, relative to animation's start
+					    var now = new Date().getTime();
+						var dt = now - (time || now);
+					    time = now;
+						currentTime += dt;
+	
+						// Determine animation's progress
+						var animationProgress = Math.min(1, currentTime / totalDuration);
+
+						// Calculate new highlight position
+						var newPosition = startPosition + (animationProgress * totalDistance);
+	
+						// Update highlights position
+						CtaHilight.setAttribute('transform', 'translate(' + newPosition + ', 13) rotate(' + hilightRotation + ')');
+					}
+	
+				}
+
+				// Function called on mouse out
+				function resetShimmer() {
+					currentTime = 0;
+					time = null;
+	
+					// Reset highlight's position
+					CtaHilight.setAttribute('transform', 'translate(' + startPosition + ', 13) rotate(' + hilightRotation + ')');
+				}
+				
+				// Add mouse enter event listener
+				var button = document.getElementById('svgButton');
+				button.addEventListener('mouseenter', function() {
+					highlightActive = true;
+					animateShimmer();
+				});
+				
+				// Shimmer button on first load
+				highlightActive = true;
+				animateShimmer();
+			}
+		</script>
+	
+	</head>
+
+	<body onload="initAnimation()">
+	
+		<svg id="svgButton" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="184" height="52" viewBox="0 0 92 26" xml:space="preserve">
+
+			<defs>
+
+				<rect id="CtaButtonShape" fill="#F5C400" width="92" height="26" rx="10" ry="10"/>
+
+			</defs>
+
+			<clipPath id="CtaHilightClipPath">
+		
+				<use xlink:href="#CtaButtonShape"/>
+		
+			</clipPath>
+
+			<g id="CtaBackground">
+		
+				<use xlink:href="#CtaButtonShape"/>
+		
+			</g>
+
+			<g clip-path="url(#CtaHilightClipPath)">
+	
+				<g id="CtaHilight" transform="translate(-30, 13) rotate(-30)">
+	
+					<linearGradient id="CtaHilightGradient" gradientUnits="userSpaceOnUse" x1="-15" x2="15" y1="0" y2="0">
+				
+						<stop  offset="0" style="stop-color:#FFF;stop-opacity:0"/>
+						<stop  offset="0.4" style="stop-color:#FFF;stop-opacity:0.9"/>
+						<stop  offset="0.6" style="stop-color:#FFF;stop-opacity:0.9"/>
+						<stop  offset="1" style="stop-color:#FFF;stop-opacity:0"/>
+				
+					</linearGradient>
+			
+					<rect fill="url(#CtaHilightGradient)" x="-15" y="-43" width="30" height="86"/>
+			
+				</g>
+	
+			</g>
+
+			<g id="CtaText">
+
+				<path fill="#FFFFFF" d="M13.7,7.3c0.5,0,1,0,1.5,0.1c0.4,0.1,0.8,0.3,1.2,0.5c0.3,0.2,0.6,0.5,0.7,0.9c0.2,0.4,0.3,0.8,0.3,1.3
+					c0,0.6-0.1,1.1-0.4,1.4c-0.3,0.4-0.6,0.7-1.2,0.9c0.7,0.2,1.2,0.6,1.6,1.1c0.3,0.5,0.5,1.1,0.5,1.8c0,0.6-0.1,1.1-0.3,1.5
+					c-0.2,0.4-0.5,0.8-0.9,1c-0.4,0.3-0.8,0.5-1.3,0.6c-0.5,0.1-1,0.2-1.5,0.2H8.3V7.3H13.7z M13.3,12c0.4,0,0.8-0.1,1.1-0.3
+					c0.3-0.2,0.4-0.6,0.4-1c0-0.3,0-0.5-0.1-0.7c-0.1-0.2-0.2-0.3-0.4-0.4c-0.2-0.1-0.3-0.2-0.6-0.2c-0.2,0-0.4-0.1-0.6-0.1h-2.4V12
+					H13.3z M13.5,16.8c0.2,0,0.5,0,0.7-0.1c0.2,0,0.4-0.1,0.6-0.2c0.2-0.1,0.3-0.3,0.4-0.5c0.1-0.2,0.2-0.4,0.2-0.7
+					c0-0.6-0.2-1-0.5-1.3c-0.3-0.3-0.8-0.4-1.3-0.4h-2.7v3.1H13.5z M27.9,17.9c-0.9,0.8-2.1,1.1-3.6,1.1c-1.5,0-2.7-0.4-3.6-1.1
+					c-0.8-0.7-1.3-1.9-1.3-3.5V7.3H22v7.1c0,0.3,0,0.6,0.1,0.9s0.2,0.6,0.3,0.8s0.4,0.4,0.7,0.6c0.3,0.1,0.7,0.2,1.2,0.2
+					c0.9,0,1.5-0.2,1.9-0.6c0.3-0.4,0.5-1,0.5-1.9V7.3h2.5v7.1C29.2,16,28.8,17.1,27.9,17.9z M30.2,7.3H33l2.7,4.5l2.7-4.5h2.8l-4.2,7
+					v4.4h-2.5v-4.4L30.2,7.3z M49,7.3l4.8,7.7h0V7.3h2.4v11.4h-2.5l-4.8-7.6h0v7.6h-2.4V7.3H49z M58.3,10.7c0.3-0.7,0.6-1.4,1.1-1.9
+					s1.1-1,1.8-1.3c0.7-0.3,1.5-0.5,2.4-0.5c0.9,0,1.7,0.2,2.4,0.5c0.7,0.3,1.3,0.7,1.8,1.3s0.8,1.2,1.1,1.9c0.3,0.7,0.4,1.5,0.4,2.4
+					c0,0.8-0.1,1.6-0.4,2.3c-0.3,0.7-0.6,1.3-1.1,1.9c-0.5,0.5-1.1,1-1.8,1.3S64.4,19,63.5,19c-0.9,0-1.7-0.2-2.4-0.5s-1.3-0.7-1.8-1.3
+					c-0.5-0.5-0.8-1.2-1.1-1.9c-0.3-0.7-0.4-1.5-0.4-2.3C57.9,12.2,58,11.4,58.3,10.7z M60.6,14.5c0.1,0.5,0.3,0.9,0.5,1.2
+					c0.2,0.4,0.6,0.7,1,0.9c0.4,0.2,0.9,0.3,1.4,0.3c0.6,0,1-0.1,1.4-0.3s0.7-0.5,1-0.9c0.2-0.4,0.4-0.8,0.5-1.2
+					c0.1-0.5,0.2-0.9,0.2-1.4c0-0.5-0.1-1-0.2-1.5c-0.1-0.5-0.3-0.9-0.5-1.3c-0.2-0.4-0.6-0.7-1-0.9s-0.9-0.3-1.4-0.3
+					c-0.6,0-1,0.1-1.4,0.3c-0.4,0.2-0.7,0.5-1,0.9c-0.2,0.4-0.4,0.8-0.5,1.3c-0.1,0.5-0.2,1-0.2,1.5C60.4,13.6,60.4,14,60.6,14.5z
+					 M79.2,18.8L77.3,11h0l-1.9,7.8h-2.5l-3-11.4h2.5l1.8,7.8h0l2-7.8h2.4l2,7.9h0l1.9-7.9h2.5l-3.1,11.4H79.2z"/>
+
+			</g>
+
+		</svg>
+
+	</body>
+
+</html>
